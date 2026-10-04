@@ -1,0 +1,15 @@
+# Dependencies
+client/node_modules/
+server/node_modules/
+
+# Environment variables
+server/.env
+
+# Local database
+server/floof.db
+
+# Build output
+client/dist/
+
+# Logs
+*.log
