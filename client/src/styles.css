@@ -1161,11 +1161,12 @@ input[type="range"] {
 
 /* ============================================================
    ASK FLOOF CARD (dashboard card + full Ask Floof page)
-   Same layout in both: teddy | message, chips below, then input
+   One single block. The card now stretches to the same height as
+   the Today card next to it, with the input pinned to the bottom.
    ============================================================ */
 .card.ask {
-  height: auto;
-  align-self: start;
+  height: 100%; /* fills the grid cell, same height as the Today card */
+  align-self: stretch; /* was "start", which made the card shrink */
   gap: 10px;
   overflow: hidden;
 }
@@ -1226,7 +1227,7 @@ input[type="range"] {
   gap: 12px;
 }
 
-/* Teddy: fixed size, top-aligned, never overlaps anything */
+/* Teddy: fixed size, top-left */
 .card.ask .intro > :first-child {
   flex: 0 0 46px;
   width: 46px;
@@ -1236,63 +1237,70 @@ input[type="range"] {
   animation: floof-idle 5s ease-in-out infinite;
 }
 
-/* Content column: message on row 1, three equal chips on row 2 */
+/* Content column: message row, then chips row */
 .card.ask .intro > div {
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 600px;
+  max-width: 640px;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 8px;
-  align-items: stretch;
+  gap: 10px;
+  align-content: start;
 }
 
-/* Message spans all three columns, left-aligned */
+/* Message spans the full width */
 .card.ask .intro > div > p {
   grid-column: 1 / -1;
-  margin: 0 0 4px;
+  margin: 0;
   text-align: left;
   line-height: 1.4;
 }
 
-/* Chips: identical width and height, text centered */
+/* If the chips sit inside their own wrapper, it spans the full width
+   and splits into 3 equal columns itself */
+.card.ask .intro > div > :not(p):not(.chip) {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+}
+
+/* Chips: identical size, text centered */
 .card.ask .intro .chip {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: none;
   width: 100%;
   min-width: 0;
+  max-width: none;
   height: auto;
-  min-height: 46px;
+  min-height: 52px;
   margin: 0;
-  padding: 6px 10px;
+  padding: 8px 12px;
+  border-radius: 20px;
   font-size: 13px;
-  line-height: 1.2;
-  white-space: normal;
+  line-height: 1.25;
   text-align: center;
+  white-space: normal;
 }
 
-/* Small screens: chips drop to two per row */
-@media (max-width: 700px) {
-  .card.ask .intro > div {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-/* Full Ask Floof page: no big empty gap between the intro and the input.
-   Once there are real messages, the chat area still grows up to its max height. */
+/* Full Ask Floof page: no big empty gap while only the intro is showing.
+   Once there are real messages, the chat area grows again. */
 .card.ask .msgs.tall:has(.intro) {
   min-height: 0;
 }
 
-/* Input row sits right under the chips */
+/* Input row: pinned to the bottom of the card */
 .card.ask .add,
 .card.ask .row {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   gap: 10px;
-  margin-top: 4px;
+  margin-top: auto;
 }
 .card.ask .add > input,
 .card.ask .row > input {
@@ -1318,6 +1326,14 @@ input[type="range"] {
 .card.ask .add > .btn:active,
 .card.ask .row > .btn:active {
   box-shadow: none;
+}
+
+/* Small screens: chips drop to two per row */
+@media (max-width: 700px) {
+  .card.ask .intro > div,
+  .card.ask .intro > div > :not(p):not(.chip) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 /* ============================================================
@@ -1370,82 +1386,7 @@ input[type="range"] {
 .reactions button:hover {
   background: #f6edff;
 }
-/* ============================================================
-   ASK FLOOF INTRO: FINAL FIX
-   Teddy | message on top, 3 equal chips below
-   ============================================================ */
-.card.ask .intro {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 12px;
-}
 
-/* Teddy stays small and top-left */
-.card.ask .intro > :first-child {
-  flex: 0 0 46px;
-  width: 46px;
-  height: 46px;
-  margin: 0;
-}
-
-/* Content column: message row, then chips row */
-.card.ask .intro > div {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  flex: 1 1 auto;
-  min-width: 0;
-  max-width: 640px;
-  align-content: start;
-}
-
-/* Message spans the full width */
-.card.ask .intro > div > p {
-  grid-column: 1 / -1;
-  margin: 0;
-  text-align: left;
-  line-height: 1.4;
-}
-
-/* If the chips sit inside their own wrapper, that wrapper spans the full width
-   and splits into 3 equal columns itself */
-.card.ask .intro > div > :not(p):not(.chip) {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 10px;
-  width: 100%;
-  margin: 0;
-}
-
-/* Chips: identical size, text centered, no circles */
-.card.ask .intro .chip {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: none;
-  width: 100%;
-  min-width: 0;
-  max-width: none;
-  height: auto;
-  min-height: 52px;
-  margin: 0;
-  padding: 8px 12px;
-  border-radius: 20px;
-  font-size: 13px;
-  line-height: 1.25;
-  text-align: center;
-  white-space: normal;
-}
-
-/* Small screens: two chips per row */
-@media (max-width: 700px) {
-  .card.ask .intro > div,
-  .card.ask .intro > div > :not(p):not(.chip) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
 /* ============================================================
    MOBILE HEADER FIX
    ============================================================ */
