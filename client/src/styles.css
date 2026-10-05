@@ -1160,13 +1160,13 @@ input[type="range"] {
 }
 
 /* ============================================================
-   ASK FLOOF CARD
+   ASK FLOOF CARD (dashboard card + full Ask Floof page)
+   Same layout in both: teddy | message, chips below, then input
    ============================================================ */
-/* Card height follows its content, and nothing scrolls inside it */
 .card.ask {
   height: auto;
   align-self: start;
-  gap: 8px;
+  gap: 10px;
   overflow: hidden;
 }
 
@@ -1194,7 +1194,6 @@ input[type="range"] {
   white-space: nowrap;
   opacity: 0.6;
 }
-/* if the text and bin are direct children of the header, push both to the right */
 .card.ask header small {
   margin-left: auto;
 }
@@ -1219,53 +1218,53 @@ input[type="range"] {
   }
 }
 
-/* Intro: teddy on the left, text block on the right */
+/* Intro row: teddy on the left, content column on the right */
 .card.ask .intro {
   display: flex;
+  flex-direction: row;
   align-items: flex-start;
   gap: 12px;
 }
 
-/* Text column: message on top, chips below in one row */
-.card.ask .intro > div {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-/* Message takes the full width of the text column */
-.card.ask .intro > div > p {
-  flex: 0 0 100%;
-  margin: 0 0 2px;
-}
-
-/* Teddy: slightly bigger and moved up beside the first line */
+/* Teddy: fixed size, top-aligned, never overlaps anything */
 .card.ask .intro > :first-child {
-  flex: none;
+  flex: 0 0 46px;
   width: 46px;
   height: 46px;
-  margin-top: 2px;
+  margin: 0;
+  align-self: flex-start;
   animation: floof-idle 5s ease-in-out infinite;
 }
 
-/* Intro text */
-.card.ask .intro p {
-  text-align: left;
-  max-width: none;
-  line-height: 1.35;
+/* Content column: message on row 1, three equal chips on row 2 */
+.card.ask .intro > div {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 600px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  align-items: stretch;
 }
 
-/* Chips: equal width, equal height, same text size */
+/* Message spans all three columns, left-aligned */
+.card.ask .intro > div > p {
+  grid-column: 1 / -1;
+  margin: 0 0 4px;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* Chips: identical width and height, text centered */
 .card.ask .intro .chip {
-  flex: 1 1 0;
-  min-width: 0;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  min-width: 0;
   height: auto;
   min-height: 46px;
+  margin: 0;
   padding: 6px 10px;
   font-size: 13px;
   line-height: 1.2;
@@ -1273,13 +1272,20 @@ input[type="range"] {
   text-align: center;
 }
 
-/* First chip stretches back under the teddy (teddy 46px + 12px gap = 58px),
-   so the chip row spans the full card width */
-.card.ask .intro .chip:first-of-type {
-  margin-left: -58px;
+/* Small screens: chips drop to two per row */
+@media (max-width: 700px) {
+  .card.ask .intro > div {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-/* Input row sits closer to the chips */
+/* Full Ask Floof page: no big empty gap between the intro and the input.
+   Once there are real messages, the chat area still grows up to its max height. */
+.card.ask .msgs.tall:has(.intro) {
+  min-height: 0;
+}
+
+/* Input row sits right under the chips */
 .card.ask .add,
 .card.ask .row {
   display: flex;
@@ -1298,7 +1304,7 @@ input[type="range"] {
     border-color 0.15s,
     box-shadow 0.15s;
 }
-/* Send button: about 10% smaller, no longer dominant */
+/* Send button: smaller, not dominant */
 .card.ask .add > .btn,
 .card.ask .row > .btn {
   flex: none;
@@ -1363,4 +1369,146 @@ input[type="range"] {
 }
 .reactions button:hover {
   background: #f6edff;
+}
+/* ============================================================
+   ASK FLOOF INTRO: FINAL FIX
+   Teddy | message on top, 3 equal chips below
+   ============================================================ */
+.card.ask .intro {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* Teddy stays small and top-left */
+.card.ask .intro > :first-child {
+  flex: 0 0 46px;
+  width: 46px;
+  height: 46px;
+  margin: 0;
+}
+
+/* Content column: message row, then chips row */
+.card.ask .intro > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 640px;
+  align-content: start;
+}
+
+/* Message spans the full width */
+.card.ask .intro > div > p {
+  grid-column: 1 / -1;
+  margin: 0;
+  text-align: left;
+  line-height: 1.4;
+}
+
+/* If the chips sit inside their own wrapper, that wrapper spans the full width
+   and splits into 3 equal columns itself */
+.card.ask .intro > div > :not(p):not(.chip) {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+  margin: 0;
+}
+
+/* Chips: identical size, text centered, no circles */
+.card.ask .intro .chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  height: auto;
+  min-height: 52px;
+  margin: 0;
+  padding: 8px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  line-height: 1.25;
+  text-align: center;
+  white-space: normal;
+}
+
+/* Small screens: two chips per row */
+@media (max-width: 700px) {
+  .card.ask .intro > div,
+  .card.ask .intro > div > :not(p):not(.chip) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* ============================================================
+   MOBILE HEADER FIX
+   ============================================================ */
+@media (max-width: 700px) {
+  /* Stack: greeting block on top, search + bell below, all left-aligned */
+  .top {
+    flex-direction: column;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .hello {
+    display: block;
+    width: 100%;
+    text-align: left;
+  }
+
+  /* Sparkles float over the text on small screens, so hide them */
+  .hello .spark,
+  .top .spark,
+  main > .spark {
+    display: none;
+  }
+
+  /* Heading: smaller, tighter, wraps cleanly */
+  .hello h2 {
+    font-size: 26px;
+    line-height: 1.15;
+    margin: 0 0 6px;
+    overflow-wrap: break-word;
+  }
+
+  /* Subtitle: readable size, left-aligned, no overlap */
+  .top p,
+  .hello p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.45;
+    text-align: left;
+    max-width: 32ch;
+  }
+
+  /* Search takes the full row, bell sits at the end, nothing gets cut off */
+  .tools {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .searchwrap {
+    flex: 1;
+    min-width: 0;
+  }
+  .search {
+    width: 100%;
+  }
+  .search input {
+    width: 100%;
+    min-width: 0;
+  }
+  .bellwrap {
+    flex: none;
+  }
 }
