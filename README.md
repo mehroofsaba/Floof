@@ -170,3 +170,29 @@ It turned into one of those projects where I kept thinking:
 _"okay but what if we also add this..."_
 
 And that is probably how Floof ended up becoming Floof.
+
+\## Screenshots
+
+\### Home
+
+!\[Floof Home](screenshots/home.png)
+
+\### Dashboard
+
+!\[Floof Dashboard](screenshots/dashboard.png)
+
+\### Today
+
+!\[Floof Today](screenshots/today.png)
+
+\### Projects
+
+!\[Floof Projects](screenshots/projects.png)
+
+\### Ask Floof
+
+!\[Ask Floof](screenshots/askfloof.png)
+
+\### Mobile
+
+!\[Floof Mobile](screenshots/mobileview.png)
