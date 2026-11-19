@@ -125,6 +125,10 @@ Then start the backend and frontend using the provided scripts or the package sc
 
 The exact setup may change as Floof continues to grow, so the repository is the source of truth for the latest setup instructions.
 
+## Deployed Link - 
+
+https://floof-8z0k.onrender.com/
+
 ## Why I built it
 
 I could have made another productivity dashboard.
